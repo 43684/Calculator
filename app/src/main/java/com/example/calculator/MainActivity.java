@@ -2,11 +2,14 @@ package com.example.calculator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -55,9 +58,95 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         MaterialButton button =(MaterialButton) view;
         String buttonText = button.getText().toString();
-         solutionTv.setText(buttonText);
+        String dataToCalculate = solutionTv.getText().toString();
 
+        if(buttonText.equals("AC")){
+            solutionTv.setText("");
+            resultTv.setText("0");
+            return;
+        }
+        if(buttonText.equals("=")){
+            solutionTv.setText(resultTv.getText());
+            return;
+        }
+        if(buttonText.equals("C")){
+            dataToCalculate = dataToCalculate.substring(0,dataToCalculate.length()-1);
+        }else{
+            dataToCalculate = dataToCalculate+buttonText;
+        }
+        solutionTv.setText(dataToCalculate);
 
+        String finalResult = getResult(dataToCalculate);
+
+        if(!finalResult.equals("Err")){
+            resultTv.setText(finalResult);
+        }
 
     }
+
+    String getResult(String data){
+        char[]chars = data.toCharArray();
+        String[] strings = new  String[0];
+        if(data.matches("^(?!.*([/*+-]{2}|^[/*+-]|.*[/*+-]$))[0-9/*+\\-()]+$")) {
+            while (chars.length != 0) {
+                if(speicalIndex(data) == 1000)
+                    return data;
+                else if(speicalIndex(data) > 0) {
+
+                }
+                else {
+
+                }
+            }
+        }
+        return "Err";
+
+    }
+
+    private  int speicalIndex(String string)
+    {
+        int anInt = 1000;
+        if(notMinus(string.indexOf('*')))
+            anInt = string.indexOf('*');
+        if(notMinus(string.indexOf('+')) && string.indexOf('+') < anInt)
+            anInt = string.indexOf('+');
+        if(notMinus(string.indexOf('-')) && string.indexOf('-') < anInt)
+            anInt = string.indexOf('-');
+        if(notMinus(string.indexOf('/')) && string.indexOf('/') < anInt)
+            anInt = string.indexOf('/');
+        if(notMinus(string.indexOf('(')) && string.indexOf('(') < anInt)
+            anInt = string.indexOf('(');
+        return anInt;
+    }
+    private boolean notMinus(int anInt)
+    {
+        if(anInt > -1)
+            return true;
+        return false;
+    }
+
+    private boolean charIsNumber(char achar) {
+        if(achar == 0)
+            return true;
+        if(achar == 1)
+            return true;
+        if(achar == 2)
+            return true;
+        if(achar == 3)
+            return true;
+        if(achar == 4)
+            return true;
+        if(achar == 5)
+            return true;
+        if(achar == 6)
+            return true;
+        if(achar == 7)
+            return true;
+        if(achar == 8)
+            return true;
+        if(achar == 9)
+            return true;
+        return  false;
+    }
+
 }
