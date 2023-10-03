@@ -1,17 +1,16 @@
 package com.example.calculator;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Scriptable;
 
-import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     TextView resultTv,solutionTv;
     MaterialButton buttonC,buttonBrackOpen,buttonBrackClose;
@@ -24,11 +23,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /* detta är bara ett test */
         resultTv = findViewById(R.id.result_tv);
         solutionTv = findViewById(R.id.solution_tv);
 
-        /* Ger namn till alla knappar på xml filen */
         assignId(buttonC,R.id.button_c);
         assignId(buttonBrackOpen,R.id.button_open_bracket);
         assignId(buttonBrackClose,R.id.button_close_bracket);
@@ -49,16 +46,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         assignId(button9,R.id.button_9);
         assignId(buttonAC,R.id.button_ac);
         assignId(buttonDot,R.id.button_dot);
+
+
+
+
+
     }
-    void assignId(MaterialButton btn,int id) {
+
+    void assignId(MaterialButton btn,int id){
         btn = findViewById(id);
         btn.setOnClickListener(this);
     }
+
+
     @Override
     public void onClick(View view) {
         MaterialButton button =(MaterialButton) view;
         String buttonText = button.getText().toString();
         String dataToCalculate = solutionTv.getText().toString();
+
 
         if(buttonText.equals("AC")){
             solutionTv.setText("");
@@ -70,7 +76,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         if(buttonText.equals("C")){
-            dataToCalculate = dataToCalculate.substring(0,dataToCalculate.length()-1);
+            if(dataToCalculate.length() >= 2)
+                dataToCalculate = dataToCalculate.substring(0,dataToCalculate.length()-1);
+            else  if(dataToCalculate.length() == 1) {
+                solutionTv.setText("");
+                resultTv.setText("0");
+                return;
+            }
         }else{
             dataToCalculate = dataToCalculate+buttonText;
         }
@@ -85,68 +97,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     String getResult(String data){
-        char[]chars = data.toCharArray();
-        String[] strings = new  String[0];
-        if(data.matches("^(?!.*([/*+-]{2}|^[/*+-]|.*[/*+-]$))[0-9/*+\\-()]+$")) {
-            while (chars.length != 0) {
-                if(speicalIndex(data) == 1000)
-                    return data;
-                else if(speicalIndex(data) > 0) {
-
-                }
-                else {
-
-                }
+        try{
+            Context context  = Context.enter();
+            context.setOptimizationLevel(-1);
+            Scriptable scriptable = context.initStandardObjects();
+            String finalResult =  context.evaluateString(scriptable,data,"Javascript",1,null).toString();
+            if(finalResult.endsWith(".0")){
+                finalResult = finalResult.replace(".0","");
             }
+            return finalResult;
+        }catch (Exception e){
+            return "Err";
         }
-        return "Err";
-
-    }
-
-    private  int speicalIndex(String string)
-    {
-        int anInt = 1000;
-        if(notMinus(string.indexOf('*')))
-            anInt = string.indexOf('*');
-        if(notMinus(string.indexOf('+')) && string.indexOf('+') < anInt)
-            anInt = string.indexOf('+');
-        if(notMinus(string.indexOf('-')) && string.indexOf('-') < anInt)
-            anInt = string.indexOf('-');
-        if(notMinus(string.indexOf('/')) && string.indexOf('/') < anInt)
-            anInt = string.indexOf('/');
-        if(notMinus(string.indexOf('(')) && string.indexOf('(') < anInt)
-            anInt = string.indexOf('(');
-        return anInt;
-    }
-    private boolean notMinus(int anInt)
-    {
-        if(anInt > -1)
-            return true;
-        return false;
-    }
-
-    private boolean charIsNumber(char achar) {
-        if(achar == 0)
-            return true;
-        if(achar == 1)
-            return true;
-        if(achar == 2)
-            return true;
-        if(achar == 3)
-            return true;
-        if(achar == 4)
-            return true;
-        if(achar == 5)
-            return true;
-        if(achar == 6)
-            return true;
-        if(achar == 7)
-            return true;
-        if(achar == 8)
-            return true;
-        if(achar == 9)
-            return true;
-        return  false;
     }
 
 }
