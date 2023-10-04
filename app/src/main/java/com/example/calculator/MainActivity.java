@@ -99,7 +99,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else{
             if(buttonText.equals("√")){
                 dataToCalculate = calculateSqRoute(dataToCalculate);
-            } else {
+            }
+            if(buttonText.equals("%")){
+                dataToCalculate = calculatePercent(dataToCalculate);
+            }
+            if(buttonText.equals("A = π r²")){
+                dataToCalculate = calculateCircleArea(dataToCalculate);
+            }
+            else {
                 dataToCalculate = dataToCalculate+buttonText;
             }
 
@@ -133,6 +140,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String calculateSqRoute(String data){
         double result = Double.parseDouble(data);
         return String.valueOf(Math.sqrt(result));
+    }
+
+    String calculatePercent(String data){
+        double result = Double.parseDouble(data);
+        return String.valueOf(result/100);
+    }
+
+    String calculateCircleArea(String data){
+        double result = Double.parseDouble(data);
+        return String.valueOf(Math.PI * Math.pow(result, 2));
     }
 
 }
