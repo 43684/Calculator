@@ -9,6 +9,8 @@ import com.google.android.material.button.MaterialButton;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 
+import java.lang.Double;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     MaterialButton button0,button1,button2,button3,button4,button5,button6,button7,button8,button9;
     MaterialButton buttonAC,buttonDot;
 
+    MaterialButton buttonSqRoute,buttonPercent,buttonCylinderVolume,buttonPythagorasTheorem,buttonCircleArea;
 
     //TODO: Fixa hård kodade strängar och dimens och colors till eget xml fil
     //TODO: Referens till nya knapparna med varsin metod
@@ -51,6 +54,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         assignId(button9,R.id.button_9);
         assignId(buttonAC,R.id.button_ac);
         assignId(buttonDot,R.id.button_dot);
+        assignId(buttonSqRoute,R.id.button_sqRoute);
+        assignId(buttonPercent,R.id.button_percent);
+        assignId(buttonCylinderVolume,R.id.button_cylinderVolume);
+        assignId(buttonPythagorasTheorem,R.id.button_pythagorasTheorem);
+        assignId(buttonCircleArea,R.id.button_circleArea);
 
 
 
@@ -89,11 +97,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return;
             }
         }else{
-            dataToCalculate = dataToCalculate+buttonText;
+            if(buttonText.equals("√")){
+                dataToCalculate = calculateSqRoute(dataToCalculate);
+            } else {
+                dataToCalculate = dataToCalculate+buttonText;
+            }
+
         }
         solutionTv.setText(dataToCalculate);
+        String finalResult = dataToCalculate;
 
-        String finalResult = getResult(dataToCalculate);
+        finalResult = getResult(dataToCalculate);
 
         if(!finalResult.equals("Err")){
             resultTv.setText(finalResult);
@@ -114,6 +128,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }catch (Exception e){
             return "Err";
         }
+    }
+
+    String calculateSqRoute(String data){
+        double result = Double.parseDouble(data);
+        return String.valueOf(Math.sqrt(result));
     }
 
 }
