@@ -19,6 +19,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     MaterialButton buttonAC,buttonDot;
 
 
+    //TODO: Fixa hård kodade strängar och dimens och colors till eget xml fil
+    //TODO: Referens till nya knapparna med varsin metod
+    //TODO: Fixa layout så att det inte går att landscapa
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
