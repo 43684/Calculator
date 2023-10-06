@@ -156,7 +156,7 @@
                 />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_close_bracket"
-                android:layout_width="72dp"
+                android:layout_width="@dimen/btn_sq_large"
                 android:layout_height="72dp"
                 app:cornerRadius="32dp"
                 style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
