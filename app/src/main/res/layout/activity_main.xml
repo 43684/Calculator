@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#4CAF50"
+    android:background="@color/white"
     tools:context=".MainActivity">
 
 
@@ -13,11 +13,11 @@
         android:layout_height="match_parent"
         android:id="@+id/solution_tv"
         android:text=""
-        android:textSize="32sp"
+        android:textSize="@dimen/textsize_large"
         android:textAlignment="textEnd"
         android:textColor="@color/black"
         android:layout_above="@+id/result_tv"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/textview_margin"
         />
 
 
@@ -26,18 +26,18 @@
         android:layout_height="wrap_content"
         android:id="@+id/result_tv"
         android:text="0"
-        android:textSize="64sp"
+        android:textSize="@dimen/textsize_xl"
         android:textAlignment="textEnd"
         android:textColor="@color/black"
         android:layout_above="@+id/buttons_layout"
-        android:layout_margin="16dp"
+        android:layout_margin="@dimen/textview_margin"
         />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/buttons_layout"
         android:layout_alignParentBottom="true"
-        android:background="#FFD600"
+        android:background="@color/yellow"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,44 +47,44 @@
             >
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_sqRoute"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                app:cornerRadius="32dp"
+                android:layout_width="@dimen/btn_sq_large"
+                android:layout_height="@dimen/btn_sq_large"
+                app:cornerRadius="@dimen/btn_sq_small"
                 style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-                android:textSize="32sp"
+                android:textSize="@dimen/textsize_medium"
                 android:textColor="@color/white"
-                android:backgroundTint="#FF6D00"
-                android:text="√"
+                android:backgroundTint="@color/orange"
+                android:text="@string/V"
                 android:layout_marginHorizontal="@dimen/btn_margin_horizontal"
                 android:layout_marginVertical="@dimen/btn_margin_vertical"
                 />
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="72dp"
+                android:layout_height="@dimen/btn_sq_large"
                 android:orientation="vertical"
                 android:layout_marginHorizontal="@dimen/btn_margin_horizontal"
                 android:layout_marginVertical="@dimen/btn_margin_vertical"
                 >
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_percent"
-                    android:layout_width="120dp"
-                    android:layout_height="35dp"
-                    app:cornerRadius="32dp"
-                    android:textSize="12sp"
+                    android:layout_width="@dimen/width_large"
+                    android:layout_height="@dimen/hight_medium"
+                    app:cornerRadius="@dimen/btn_sq_small"
+                    android:textSize="@dimen/textsize_small"
                     android:textColor="@color/white"
-                    android:backgroundTint="#FF6D00"
+                    android:backgroundTint="@color/orange"
                     android:text="%"
 
                     />
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_circleArea"
-                    android:layout_width="120dp"
-                    android:layout_height="35dp"
-                    app:cornerRadius="32dp"
-                    android:textSize="12sp"
+                    android:layout_width="@dimen/width_large"
+                    android:layout_height="@dimen/hight_medium"
+                    app:cornerRadius="@dimen/btn_sq_small"
+                    android:textSize="@dimen/textsize_small"
                     android:textColor="@color/white"
-                    android:backgroundTint="#FF6D00"
+                    android:backgroundTint="@color/orange"
                     android:text="A = π r²"
                     android:layout_marginTop="@dimen/btn_margin_vertical"
                     />
@@ -92,31 +92,31 @@
             </LinearLayout>
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="72dp"
+                android:layout_height="@dimen/btn_sq_large"
                 android:orientation="vertical"
                 android:layout_marginHorizontal="@dimen/btn_margin_horizontal"
                 android:layout_marginVertical="@dimen/btn_margin_vertical"
                 >
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_pythagorasTheorem"
-                    android:layout_width="120dp"
-                    android:layout_height="35dp"
-                    app:cornerRadius="32dp"
-                    android:textSize="12sp"
+                    android:layout_width="@dimen/width_large"
+                    android:layout_height="@dimen/hight_medium"
+                    app:cornerRadius="@dimen/textsize_medium"
+                    android:textSize="@dimen/textsize_small"
                     android:textColor="@color/white"
-                    android:backgroundTint="#FF6D00"
-                    android:text="A² + B² = C²"
+                    android:backgroundTint="@color/orange"
+                    android:text="@string/pythagorasats"
 
                     />
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_cylinderVolume"
-                    android:layout_width="120dp"
-                    android:layout_height="35dp"
-                    app:cornerRadius="32dp"
-                    android:textSize="12sp"
+                    android:layout_width="@dimen/width_large"
+                    android:layout_height="@dimen/hight_medium"
+                    app:cornerRadius="@dimen/textsize_medium"
+                    android:textSize="@dimen/textsize_small"
                     android:textColor="@color/white"
-                    android:backgroundTint="#FF6D00"
-                    android:text="V = π r² h"
+                    android:backgroundTint="@color/orange"
+                    android:text="@string/cylinder"
                     android:layout_marginTop="@dimen/btn_margin_vertical"
                     />
             </LinearLayout>
@@ -130,24 +130,24 @@
             >
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_c"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                app:cornerRadius="32dp"
+                android:layout_width="@dimen/btn_sq_large"
+                android:layout_height="@dimen/btn_sq_large"
+                app:cornerRadius="@dimen/textsize_medium"
                 style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-                android:textSize="32sp"
+                android:textSize="@dimen/textsize_medium"
                 android:textColor="@color/white"
-                android:backgroundTint="#D50000"
+                android:backgroundTint="@color/red"
                 android:text="C"
                 android:layout_marginHorizontal="@dimen/btn_margin_horizontal"
                 android:layout_marginVertical="@dimen/btn_margin_vertical"
                 />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_open_bracket"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                app:cornerRadius="32dp"
+                android:layout_width="@dimen/btn_sq_large"
+                android:layout_height="@dimen/btn_sq_large"
+                app:cornerRadius="@dimen/textsize_medium"
                 style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-                android:textSize="32sp"
+                android:textSize="@dimen/textsize_medium"
                 android:textColor="@color/white"
                 android:backgroundTint="#00B8D4"
                 android:text="("
