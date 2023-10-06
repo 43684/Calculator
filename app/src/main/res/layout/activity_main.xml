@@ -157,7 +157,7 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_close_bracket"
                 android:layout_width="@dimen/btn_sq_large"
-                android:layout_height="72dp"
+                android:layout_height="@dimen/btn_sq_large"
                 app:cornerRadius="32dp"
                 style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
                 android:textSize="32sp"
