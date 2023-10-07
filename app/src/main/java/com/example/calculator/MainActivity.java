@@ -29,10 +29,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     String secondFormulaDigit = "B";
 
 
-    //TODO: Fixa hård kodade strängar och dimens och colors till eget xml fil
-    //TODO: Referens till nya knapparna med varsin metod
-    //TODO: Fixa layout så att det inte går att landscapa
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
