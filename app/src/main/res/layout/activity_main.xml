@@ -9,12 +9,13 @@
 
 
     <TextView
+        android:id="@+id/solution_tv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/solution_tv"
+        android:layout_above="@+id/result_tv"
         android:text=""
-        android:textSize="@dimen/textsize_large"
         android:textAlignment="textEnd"
+        android:textSize="@dimen/textsize_large"
         android:textColor="@color/black"
         android:layout_above="@+id/result_tv"
         android:layout_margin="@dimen/textview_margin"
@@ -22,9 +23,10 @@
 
 
     <TextView
+        android:id="@+id/result_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/result_tv"
+        android:layout_above="@+id/buttons_layout"
         android:text="0"
         android:textSize="@dimen/textsize_xl"
         android:textAlignment="textEnd"
