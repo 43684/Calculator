@@ -22,13 +22,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     MaterialButton buttonSqRoute,buttonPercent,buttonCylinderVolume,buttonPythagorasTheorem,buttonCircleArea;
 
-    Boolean buttonPythagorasTheoremClicked = false;
-    Boolean buttonCylinderVolumeClicked = false;
-
-    String firstFormulaDigit = "A";
-    String secondFormulaDigit = "B";
-
-
     //TODO: Fixa hård kodade strängar och dimens och colors till eget xml fil
     //TODO: Referens till nya knapparna med varsin metod
     //TODO: Fixa layout så att det inte går att landscapa
@@ -68,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         assignId(buttonCircleArea,R.id.button_circleArea);
 
 
+
+
+
     }
 
     void assignId(MaterialButton btn,int id){
@@ -81,181 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MaterialButton button =(MaterialButton) view;
         String buttonText = button.getText().toString();
         String dataToCalculate = solutionTv.getText().toString();
-        String dataToCalculateFormula = resultTv.getText().toString();
-        buttonPythagorasTheorem = findViewById(R.id.button_pythagorasTheorem);
-        buttonCylinderVolume = findViewById(R.id.button_cylinderVolume);
 
-
-        if (dataToCalculate.length() > 0 && dataToCalculate.charAt(0) == 'C'){
-            dataToCalculate = "";
-        }
-
-        //Pythagorans theorem started
-        /*
-        * Vi byter namn po theoremans knapp för att få en inledning vad knappen gör nästa gång
-        * och gör så att man mattar in bara siffror inte nån annan funktion så andra knapparna är döda typ*/
-        if(buttonText.equals("A² + B² = C²")){
-
-            button.setText("B² >");
-            firstFormulaDigit = dataToCalculateFormula;
-            solutionTv.setText(firstFormulaDigit+"² + B² = C²");
-            buttonPythagorasTheoremClicked = true;
-            return;
-        }
-        if(buttonText.equals("B² >")){
-            button.setText("Result");
-            firstFormulaDigit = getResult(resultTv.getText().toString());
-
-            solutionTv.setText(firstFormulaDigit+"² + B² = C²");
-            resultTv.setText("0");
-            return;
-        }if(buttonText.equals("Result")){
-            button.setText("A² + B² = C²");
-            secondFormulaDigit = getResult(resultTv.getText().toString());
-
-            solutionTv.setText("C = √("+firstFormulaDigit+"² +" + secondFormulaDigit+"²)");
-            resultTv.setText(calculateFormula());
-
-            buttonPythagorasTheoremClicked = false;
-
-            return;
-        }
-        if(buttonPythagorasTheoremClicked) {
-
-            if(buttonText.equals("AC")){
-                solutionTv.setText("");
-                resultTv.setText("0");
-                buttonPythagorasTheoremClicked = false;
-                buttonPythagorasTheorem.setText("A² + B² = C²");
-                return;
-            }
-            if(buttonText.equals("C")){
-                if(dataToCalculateFormula.length() >= 2){
-                    dataToCalculateFormula = dataToCalculateFormula.substring(0,dataToCalculateFormula.length()-1);
-                    if (secondFormulaDigit.equals("B")) {
-                        firstFormulaDigit = dataToCalculateFormula;
-                    } else {
-                        secondFormulaDigit = dataToCalculateFormula;
-                    }
-                    solutionTv.setText(firstFormulaDigit+"² + "+secondFormulaDigit+ "² = C²");
-                }
-                else  if(dataToCalculateFormula.length() == 1) {
-                    if (secondFormulaDigit.equals("B")) {
-                        firstFormulaDigit = "0";
-                    } else {
-                        secondFormulaDigit = "0";
-                    }
-                    solutionTv.setText(firstFormulaDigit+"² +" + secondFormulaDigit+"² = C");
-                    resultTv.setText("0");
-
-                    return;
-                }
-            } else {
-                dataToCalculateFormula = resultTv.getText().toString();
-                if (isNumberOrDot(buttonText)) {
-                    dataToCalculateFormula = dataToCalculateFormula + buttonText;
-                    if (buttonPythagorasTheorem.getText().toString().equals("B² >")) {
-                        firstFormulaDigit = dataToCalculateFormula;
-                        solutionTv.setText(firstFormulaDigit+"² + "+secondFormulaDigit+ "² = C²");
-                    } else if  (buttonPythagorasTheorem.getText().toString().equals("Result")){
-                        secondFormulaDigit = dataToCalculateFormula;
-                        solutionTv.setText(firstFormulaDigit+"² + "+secondFormulaDigit+ "² = C²");
-                    }
-                }
-            }
-            String number = getResult(dataToCalculateFormula);
-
-            if(!number.equals("Err")){
-                resultTv.setText(number);
-            }
-
-            return;
-        }
-
-        //Cylinders volume started
-        /*
-         * Vi byter namn po formula knapp för att få en inledning vad knappen gör nästa gång
-         * och gör så att man mattar in bara siffror inte nån annan funktion så andra knapparna är döda typ*/
-        if(buttonText.equals("V = π r² h")){
-
-            button.setText("h >");
-            firstFormulaDigit = dataToCalculateFormula;
-            solutionTv.setText("V = π "+firstFormulaDigit+"² h");
-            buttonCylinderVolumeClicked = true;
-            return;
-        }
-        if(buttonText.equals("h >")){
-            button.setText("Volume");
-            firstFormulaDigit = getResult(resultTv.getText().toString());
-
-            solutionTv.setText("V = π "+firstFormulaDigit+"² h");
-            resultTv.setText("0");
-            return;
-        }if(buttonText.equals("Volume")){
-            button.setText("V = π r² h");
-            secondFormulaDigit = getResult(resultTv.getText().toString());
-
-            solutionTv.setText("V = π "+firstFormulaDigit+"²*"+secondFormulaDigit);
-            resultTv.setText(calculateFormula());
-
-            buttonCylinderVolumeClicked = false;
-
-            return;
-        }
-        if(buttonCylinderVolumeClicked) {
-
-            if(buttonText.equals("AC")){
-                solutionTv.setText("");
-                resultTv.setText("0");
-                buttonPythagorasTheoremClicked = false;
-                buttonPythagorasTheorem.setText("V = π r² h");
-                return;
-            }
-            if(buttonText.equals("C")){
-                if(dataToCalculateFormula.length() >= 2){
-                    dataToCalculateFormula = dataToCalculateFormula.substring(0,dataToCalculateFormula.length()-1);
-                    if (secondFormulaDigit.equals("B")) {
-                        firstFormulaDigit = dataToCalculateFormula;
-                        solutionTv.setText("V = π "+firstFormulaDigit+"² h");
-                    } else {
-                        secondFormulaDigit = dataToCalculateFormula;
-                        solutionTv.setText("V = π "+firstFormulaDigit+"²*"+secondFormulaDigit);
-                    }
-
-                }
-                else  if(dataToCalculateFormula.length() == 1) {
-                    if (secondFormulaDigit.equals("B")) {
-                        firstFormulaDigit = "0";
-                        solutionTv.setText("V = π "+firstFormulaDigit+"² h");
-                    } else {
-                        secondFormulaDigit = "0";
-                        solutionTv.setText("V = π "+firstFormulaDigit+"²*"+secondFormulaDigit);
-                    }
-                    resultTv.setText("0");
-
-                    return;
-                }
-            } else {
-                dataToCalculateFormula = resultTv.getText().toString();
-                if (isNumberOrDot(buttonText)) {
-                    dataToCalculateFormula = dataToCalculateFormula + buttonText;
-                    if (buttonCylinderVolume.getText().toString().equals("h >")) {
-                        firstFormulaDigit = dataToCalculateFormula;
-                        solutionTv.setText("V = π "+firstFormulaDigit+"² h");
-                    } else if  (buttonCylinderVolume.getText().toString().equals("Volume")){
-                        secondFormulaDigit = dataToCalculateFormula;
-                        solutionTv.setText("V = π "+firstFormulaDigit+"²*"+secondFormulaDigit);
-                    }
-                }
-            }
-            String number = getResult(dataToCalculateFormula);
-
-            if(!number.equals("Err")){
-                resultTv.setText(number);
-            }
-
-            return;
-        }
 
         if(buttonText.equals("AC")){
             solutionTv.setText("");
@@ -278,10 +100,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(buttonText.equals("√")){
                 dataToCalculate = calculateSqRoute(dataToCalculate);
             }
-            else if(buttonText.equals("%")){
+            if(buttonText.equals("%")){
                 dataToCalculate = calculatePercent(dataToCalculate);
             }
-            else if(buttonText.equals("A = π r²")){
+            if(buttonText.equals("A = π r²")){
                 dataToCalculate = calculateCircleArea(dataToCalculate);
             }
             else {
@@ -290,8 +112,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
         solutionTv.setText(dataToCalculate);
+        String finalResult = dataToCalculate;
 
-        String finalResult = getResult(dataToCalculate);
+        finalResult = getResult(dataToCalculate);
 
         if(!finalResult.equals("Err")){
             resultTv.setText(finalResult);
@@ -315,52 +138,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     String calculateSqRoute(String data){
-        String failSafeData = getResult(data);
-        double result = Double.parseDouble(failSafeData);
+        double result = Double.parseDouble(data);
         return String.valueOf(Math.sqrt(result));
     }
 
     String calculatePercent(String data){
-        String failSafeData = getResult(data);
-        double result = Double.parseDouble(failSafeData);
+        double result = Double.parseDouble(data);
         return String.valueOf(result/100);
     }
 
     String calculateCircleArea(String data){
-        String failSafeData = getResult(data);
-        double result = Double.parseDouble(failSafeData);
+        double result = Double.parseDouble(data);
         return String.valueOf(Math.PI * Math.pow(result, 2));
     }
-
-    String calculateFormula(){
-        double first = Double.parseDouble(firstFormulaDigit);
-        double second = Double.parseDouble(secondFormulaDigit);
-        if (buttonPythagorasTheoremClicked) {
-            double cPow = Math.pow(first,2) + Math.pow(second,2);
-            return String.valueOf(Math.sqrt(cPow));
-        }
-
-        if (buttonCylinderVolumeClicked) {
-            buttonCylinderVolumeClicked = false;
-            return String.valueOf(Math.PI * Math.pow(first,2) * second);
-        }
-        return "";
-    }
-
-    public static boolean isNumberOrDot(String str) {
-        if (str.isEmpty()) {
-            return false;
-        }
-
-        for (char c : str.toCharArray()) {
-            if (!Character.isDigit(c) && c != '.') {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-
 
 }
