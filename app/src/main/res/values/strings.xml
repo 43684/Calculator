@@ -1,7 +1,38 @@
 <resources>
     <string name="app_name">Calculator</string>
-    <string name="V">"√</string>
-    <string name="pythagorasats">A² + B² = C²</string>
-    <string name="cylinder">V = π r² h</string>
+
+    <string name="square_route">√</string>
+    <string name="pythagora_theorem">A² + B² = C²</string>
+    <string name="cylinder_volume">V = π r² h</string>
+    <string name="circle_area">A = π r²</string>
+    <string name="percent">%</string>
+
+    <string name="solution_tv"></string>
+    <string name="result_tv">0</string>
+
+
+    <string name="left_bracket">(</string>
+    <string name="right_bracket">)</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
+    <string name="five">5</string>
+    <string name="six">6</string>
+    <string name="seven">7</string>
+    <string name="eight">8</string>
+    <string name="nine">9</string>
+    <string name="zero">0</string>
+    <string name="dot">.</string>
+
+    <string name="division">/</string>
+    <string name="plus">+</string>
+    <string name="multiplication">*</string>
+    <string name="minus">-</string>
+    <string name="cear_all">AC</string>
+    <string name="clear">C</string>
+    <string name="equal">=</string>
+
+
 
 </resources>

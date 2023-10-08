@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Margins -->
+
     <dimen name="btn_margin_horizontal">12dp</dimen>
     <dimen name="btn_margin_vertical">5dp</dimen>
-    <dimen name="textsize_large">32sp</dimen>
     <dimen name="textview_margin">16dp</dimen>
-    <dimen name="textsize_xl">64sp</dimen>
-    <dimen name="btn_sq_large">72dp</dimen>
-    <dimen name="btn_sq_small">32dp</dimen>
-    <dimen name="textsize_medium">32sp</dimen>
-    <dimen name="width_large">120dp</dimen>
-    <dimen name="hight_medium">35dp</dimen>
+
+    <!-- TextSize -->
+
     <dimen name="textsize_small">12sp</dimen>
+    <dimen name="textsize_medium">32sp</dimen>
     <dimen name="textsize_middlemedium">20sp</dimen>
+    <dimen name="textsize_large">32sp</dimen>
+    <dimen name="textsize_xl">64sp</dimen>
+
+    <!-- Layout Dimens -->
+
+    <dimen name="btn_sq">72dp</dimen>
+    <dimen name="btn_height_small">35dp</dimen>
+    <dimen name="btn_width_large">120dp</dimen>
+    <dimen name="cornerRadius">35dp</dimen>
 
 </resources>
