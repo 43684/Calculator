@@ -14,6 +14,9 @@ import java.lang.Double;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
+
+    // TODO: Deklarationen av objekt och variablar
+
     TextView resultTv,solutionTv;
     MaterialButton buttonC,buttonBrackOpen,buttonBrackClose;
     MaterialButton buttonDivide,buttonMultiply,buttonPlus,buttonMinus,buttonEquals;
@@ -66,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    // TODO: Assigning id to all buttons and implementin onClickListener to check when a button is pressed and by implementing View.OnClickListener to the clas we can call the function to all buttons with assignID method.
+
     void assignId(MaterialButton btn,int id){
         btn = findViewById(id);
         btn.setOnClickListener(this);
@@ -81,15 +86,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonPythagorasTheorem = findViewById(R.id.button_pythagorasTheorem);
         buttonCylinderVolume = findViewById(R.id.button_cylinderVolume);
 
+        // TODO: Check if we have used a formula before and clean the view and start fresh
 
-        if (dataToCalculate.length() > 0 && dataToCalculate.charAt(0) == 'C'){
+
+        if (!dataToCalculate.isEmpty() && (dataToCalculate.charAt(0) == 'C' || dataToCalculate.charAt(0) == 'V')) {
             dataToCalculate = "";
+            firstFormulaDigit = "A";
+            secondFormulaDigit = "B";
+
         }
 
-        //Pythagorans theorem started
+
+        // TODO:Pythagorans theorem started
         /*
         * Vi byter namn po theoremans knapp för att få en inledning vad knappen gör nästa gång
-        * och gör så att man mattar in bara siffror inte nån annan funktion så andra knapparna är döda typ*/
+        * och gör så att man mattar in bara siffror inte nån annan funktion exempel addition eller multiplikation ect
+        * så andra knapparna är döda typ sen implementerar huvudfunktiner för att ränsa fält
+        * eller gå tillbaka om man behöver det eller få fram resultat*/
+
         if(buttonText.equals("A² + B² = C²")){
 
             button.setText("B² >");
@@ -105,7 +119,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             solutionTv.setText(firstFormulaDigit+"² + B² = C²");
             resultTv.setText("0");
             return;
-        }if(buttonText.equals("Result")){
+        }
+        if(buttonText.equals("Result")){
             button.setText("A² + B² = C²");
             secondFormulaDigit = getResult(resultTv.getText().toString());
 
@@ -114,10 +129,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             buttonPythagorasTheoremClicked = false;
 
+
             return;
         }
         if(buttonPythagorasTheoremClicked) {
+            if(buttonText.equals("=") && secondFormulaDigit != "B"){
+                buttonPythagorasTheorem.setText("A² + B² = C²");
+                secondFormulaDigit = getResult(resultTv.getText().toString());
 
+                solutionTv.setText("C = √("+firstFormulaDigit+"² +" + secondFormulaDigit+"²)");
+                resultTv.setText(calculateFormula());
+
+                buttonPythagorasTheoremClicked = false;
+                return;
+            }
             if(buttonText.equals("AC")){
                 solutionTv.setText("");
                 resultTv.setText("0");
@@ -168,10 +193,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        //Cylinders volume started
+        // TODO:Cylinders volume started
         /*
          * Vi byter namn po formula knapp för att få en inledning vad knappen gör nästa gång
-         * och gör så att man mattar in bara siffror inte nån annan funktion så andra knapparna är döda typ*/
+         * och gör så att man mattar in bara siffror inte nån annan funktion exempel addition eller multiplikation ect
+         * så andra knapparna är döda typ sen implementerar huvudfunktiner för att ränsa fält
+         * eller gå tillbaka om man behöver det eller få fram resultat*/
         if(buttonText.equals("V = π r² h")){
 
             button.setText("h >");
@@ -187,7 +214,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             solutionTv.setText("V = π "+firstFormulaDigit+"² h");
             resultTv.setText("0");
             return;
-        }if(buttonText.equals("Volume")){
+        }
+        if(buttonText.equals("Volume")){
             button.setText("V = π r² h");
             secondFormulaDigit = getResult(resultTv.getText().toString());
 
@@ -199,12 +227,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         if(buttonCylinderVolumeClicked) {
+            if(buttonText.equals("=") && secondFormulaDigit != "B"){
+                buttonCylinderVolume.setText("V = π r² h");
 
+                secondFormulaDigit = getResult(resultTv.getText().toString());
+
+                solutionTv.setText("V = π "+firstFormulaDigit+"²*"+secondFormulaDigit);
+                resultTv.setText(calculateFormula());
+
+                buttonCylinderVolumeClicked = false;
+                return;
+            }
             if(buttonText.equals("AC")){
                 solutionTv.setText("");
                 resultTv.setText("0");
-                buttonPythagorasTheoremClicked = false;
-                buttonPythagorasTheorem.setText("V = π r² h");
+                buttonCylinderVolumeClicked = false;
+                buttonCylinderVolume.setText("V = π r² h");
                 return;
             }
             if(buttonText.equals("C")){
@@ -253,6 +291,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
+        // TODO:Resterande mindre komplicerade funktioner
+
         if(buttonText.equals("AC")){
             solutionTv.setText("");
             resultTv.setText("0");
@@ -295,6 +335,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    // TODO: getResult function to descript a string into a math problem and then return a result in string format
+
     String getResult(String data){
         try{
             Context context  = Context.enter();
@@ -309,6 +351,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return "Err";
         }
     }
+
+    // TODO: Start of calculations formulas other than calculations
+
 
     String calculateSqRoute(String data){
         String failSafeData = getResult(data);
@@ -343,6 +388,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return "";
     }
 
+
+    // TODO: Failsafe code to stop user to use other buttons while doing formula calculation
+
     public static boolean isNumberOrDot(String str) {
         if (str.isEmpty()) {
             return false;
@@ -356,7 +404,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         return true;
     }
-
 
 
 }
