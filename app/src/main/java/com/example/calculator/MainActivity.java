@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // TODO: Check if we have used a formula before and clean the view and start fresh
 
 
-        if (!dataToCalculate.isEmpty() && (dataToCalculate.charAt(0) == 'C' || dataToCalculate.charAt(0) == 'V')) {
+        if (!dataToCalculate.isEmpty() && (dataToCalculate.charAt(0) == 'C' || dataToCalculate.charAt(0) == 'V' || dataToCalculate.charAt(0) == 'I')) {
             dataToCalculate = "";
             firstFormulaDigit = "A";
             secondFormulaDigit = "B";
@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             button.setText("h >");
             firstFormulaDigit = dataToCalculateFormula;
-            solutionTv.setText("V = π "+firstFormulaDigit+"² h");
+            solutionTv.setText("π "+firstFormulaDigit+"² h = V");
             buttonCylinderVolumeClicked = true;
             return;
         }
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             button.setText("Volume");
             firstFormulaDigit = getResult(resultTv.getText().toString());
 
-            solutionTv.setText("V = π "+firstFormulaDigit+"² h");
+            solutionTv.setText("π "+firstFormulaDigit+"² h = V");
             resultTv.setText("0");
             return;
         }
@@ -253,17 +253,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         solutionTv.setText("V = π "+firstFormulaDigit+"² h");
                     } else {
                         secondFormulaDigit = dataToCalculateFormula;
-                        solutionTv.setText("V = π "+firstFormulaDigit+"²*"+secondFormulaDigit);
+                        solutionTv.setText("π "+firstFormulaDigit+"²*"+secondFormulaDigit+ " = V");
                     }
 
                 }
                 else  if(dataToCalculateFormula.length() == 1) {
                     if (secondFormulaDigit.equals("B")) {
                         firstFormulaDigit = "0";
-                        solutionTv.setText("V = π "+firstFormulaDigit+"² h");
+                        solutionTv.setText("π "+firstFormulaDigit+"² h"+ " = V");
                     } else {
                         secondFormulaDigit = "0";
-                        solutionTv.setText("V = π "+firstFormulaDigit+"²*"+secondFormulaDigit);
+                        solutionTv.setText("π "+firstFormulaDigit+"²*"+secondFormulaDigit+ " = V");
                     }
                     resultTv.setText("0");
 
@@ -275,10 +275,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     dataToCalculateFormula = dataToCalculateFormula + buttonText;
                     if (buttonCylinderVolume.getText().toString().equals("h >")) {
                         firstFormulaDigit = dataToCalculateFormula;
-                        solutionTv.setText("V = π "+firstFormulaDigit+"² h");
+                        solutionTv.setText("π "+firstFormulaDigit+"² h"+ " = V");
                     } else if  (buttonCylinderVolume.getText().toString().equals("Volume")){
                         secondFormulaDigit = dataToCalculateFormula;
-                        solutionTv.setText("V = π "+firstFormulaDigit+"²*"+secondFormulaDigit);
+                        solutionTv.setText("π "+firstFormulaDigit+"²*"+secondFormulaDigit+ " = V");
                     }
                 }
             }
