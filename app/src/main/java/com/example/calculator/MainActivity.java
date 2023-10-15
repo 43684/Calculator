@@ -10,6 +10,8 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 
 import java.lang.Double;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
@@ -337,21 +339,283 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     // TODO: getResult function to descript a string into a math problem and then return a result in string format
 
-    String getResult(String data){
-        try{
-            Context context  = Context.enter();
-            context.setOptimizationLevel(-1);
-            Scriptable scriptable = context.initStandardObjects();
-            String finalResult =  context.evaluateString(scriptable,data,"Javascript",1,null).toString();
-            if(finalResult.endsWith(".0")){
-                finalResult = finalResult.replace(".0","");
+    private String getResult(String data){
+        List<String> list = new ArrayList<String>();//listan som allting man behöver för att räkna kommer finnas i
+        if(data.matches("^(?!.*([/*+]{2}|^[/*+]|.*[/*+]$))[0-9/*.+\\-()]+$") && !data.matches(".*[-][+*/].*") && !data.matches(".*---.*") && !data.matches(".*[-+*/]$")) {//första ger true om det bara har 0-9/+*-     och att /*+ inte sitter bredvid varandra och att nån av de inte är i starten eller slutet av stringen.     andra ger true om det finns nåt sånt -*       den tredje ger true om det finns 3 minus tecken eller mer
+            while (data.length() != 0) { //man detectar saker och sparar de på ett speciellt sätt i en string lista. Och varje gång man sparar man removar på data. och på så sätt lite på taget så går man igenom hela stringet och sparar information som kan beräknas sedan i nästa while loop.
+                if(data.substring(0,1).equals("-")) {
+                    if(data.substring(0,2).equals("--")) {//om det finns 2 (-)
+                        list.add(data.substring(0,1));//addar första - i listan som man gör uträkningar med
+                        data = data.substring(1, data.length());//removar från stringen vilket är data
+                    }
+                    list.add(data.substring(0,1));//samma sak här
+                    data = data.substring(1, data.length());
+                }
+                int temp = speicalIndex(data);//kolla specialindex. Men i princip så ger den siffran av första indexen av de olika tecken man kan ha i en beräkning: (+-/*)
+                if(temp == -1)//om stringen ser ut så här )något
+                    return "Err";
+                else if (temp == 1000) {// om string ser ut t.ex så här 85049853490    basiclly bara siffror
+                    list.add(data);//addar siffrorna
+                    data = "";//removar siffrorna vilket är allt
+                }
+                else if(temp > 0) { // normalt när första av de här -+/*() är en av +/*
+                    if(parantesNearest(data)) { // det här händer när första är ( men det finns siffror innan.
+                        list.add(data.substring(0, temp)); //addar allt innan parantesen i listan man använder för att beräkna sen. Btw en lista(string) av saker man kan beräkna kan se ut så här 43, -, 432, *, -, 432, -, -, 66, 34, /, 43
+                        data = data.substring(temp, data.length());
+                    }
+                    else {// om första tecken är en av /*+
+                        list.add(data.substring(0, temp));//addar allt innan tecknet
+                        list.add(data.substring(temp, temp + 1));//addar tecktnet
+                        data = data.substring(temp + 1, data.length());//removar tecknet och allt innan det
+                    }
+                }
+                else {//kommer här bara om data börjar med '('
+                    String tempString = data.substring(1, data.length());//så att algoritmen inte går i cirklar måste man ignorera parantesen i början
+                    if(specialIndex2(tempString) == -1)//om det finns inga ')'
+                        return "Err";
+                    else if(specialIndex2(tempString) == 1)//om det ser ut så här "(något)något"
+                    {
+                        if(getResult(data.substring(1, specialIndex3(tempString) +1)) != "Err")//allt mellan '(' och ')' anledningen det är +1 till specialindex3 är eftersom det tar tempstring som är 1 charachter mindre än data
+                            list.add(getResult(data.substring(1, specialIndex3(tempString) +1)));//addar resultatet i listan
+                        else return "Err";
+                        data = data.substring(specialIndex3(tempString) +2, data.length());//anledningen är pga samma anledning samma anledning som 3 linjer uppåt
+                        if(data.matches("^[/+*].*")) {//linjerna innan bara addar resultet av vad som var i parantesen och removar parantesen och vad som var inuti. Om det nåt som (något)*något så blir det fel senare så åtgärder tas. den här kollar om data börjar med en av +-/*
+                            list.add(data.substring(0,1));
+                            data = data.substring(1, data.length());
+                        }
+
+                    }
+                    else if(specialIndex2(tempString) == 2)//om det ser ut så här "(något(något"
+                    {
+
+                        int startPara = 1;// mängden av '('
+                        int endPara = 0;//mängden av ')'
+                        String tempData = data.substring(1, data.length());//Det är 1 eftersom vi är här eftersom det är något sånt "(något(något". så vi removar första parantes då vi redan vet att det finns(vilket är varför startpara är också 1)
+                        while (startPara != endPara)// det kan finnas hur många startparantäser som helst men när mängden slutparanteser är samma som startparanteser, så kan man beräkna genom av indexet av sista slutparantes
+                        {
+                            if(specialIndex2(tempData) == -1)//om det finns inga ')'
+                                return "Err";
+                            else  if (specialIndex2(tempData) == 1) {//om första är ')'
+                                endPara++;
+                                if(startPara != endPara)//man vill att det ska vara så här i tempdata )något så att man  kan beräkna senare
+                                    tempData = tempData.substring(specialIndex3(tempData) +1, tempData.length());
+                            }
+                            else {//om första är '('
+                                startPara++;
+                                tempData = tempData.substring(specialIndex3(tempData) +1, tempData.length());
+                            }
+                        }
+                        int actualIndex = specialIndex3(tempData) + (data.length() - tempData.length()); // indexet av slutparantesen av första start parantes man detectade.
+
+                        if(data.substring(1, specialIndex3(tempString) +1).matches(".*[-+*/]$") && data.substring(1, specialIndex3(tempString) +1).length() > 0)// om det är nåt sånt (något*(något
+                        {
+                            if (!getResult(data.substring(1, specialIndex3(tempString))).equals("Err"))//här kollar den om allt mellan '(' och '(' förutom sista charackter(/+-* ger error om är i slutet av stringen man försöker räkna) så den inte ger "Err" om man gör getresult på det
+                                list.add(getResult(data.substring(1, specialIndex3(tempString))));
+                            else return "Err";
+                            list.add(data.substring(specialIndex3(tempString), specialIndex3(tempString) + 1));//här addar den characktären bakom andra '('. specialIndex2(tempString) == 2 betyder att det är (något(
+                        }
+                        else if (data.substring(1, specialIndex3(tempString) +1).length() > 0)//om det är något sånt "(någotOchIslutetÄrDetSiffra("
+                        {
+                            if (!getResult(data.substring(1, specialIndex3(tempString) +1)).equals("Err"))
+                                list.add(getResult(data.substring(1, specialIndex3(tempString) +1)));
+                            else return "Err";
+                        }
+                        if(!getResult(data.substring(specialIndex3(tempString) +1, actualIndex)).equals("Err"))//allt mellan andra startparantes och slutparanteset av första startparantes
+                            list.add(getResult(data.substring(specialIndex3(tempString) + 1, actualIndex)));
+                        else
+                            return "Err";
+                        data = data.substring(actualIndex +1, data.length());
+                        if(data.matches("^[/+*].*")) {//kollar om den börjar med de tecknen
+                            list.add(data.substring(0,1));
+                            data = data.substring(1, data.length());//de här linjerna addar första charachter i listan och removar den från stringen man försöker räkna
+                        }
+                    }
+                }
             }
-            return finalResult;
-        }catch (Exception e){
-            return "Err";
+            int ogSize = list.size();
+            while (list.size() >= 2) {
+                if(list.get(0).equals("-") && list.get(1).equals("-")) {// om det är nåt sånt -,-,3 så är det som att -,- inte var där vilket är varför de removas
+                    list.remove(0);
+                    list.remove(0);
+                }
+                else if(list.get(0).equals("-") && canConvert(list.get(1)))
+                {
+                    if (canConvert(list.get(1))) {//kolla canConvert
+                        if(list.get(1).substring(0,1).equals("-"))// om det är nåt sånt -,-43
+                            list.set(0, list.get(1).substring(1));
+                        else //om det är nåt sånt -,43
+                            list.set(0, "-" + list.get(1));
+                        list.remove(1);
+                    }
+                    else return "Err";// om det är nåt
+                }
+                if(list.size() == 1)
+                    return list.get(0);
+                if (canConvert(list.get(1))) {// om andra stringen i listan är också ett nummer som kan konverteras till float
+                    float tempDouble = Float.parseFloat(list.get(0)) * Float.parseFloat(list.get(1));
+                    list.set(0, "" + tempDouble);
+                    list.remove(1);
+                }
+                else if (list.get(1).equals("*") && canConvert(list.get(0))) {
+                    if(list.get(2).equals("-") && list.get(3).equals("-")) {//om det är nåt sånt 5,*,-,-,5
+                        list.remove(2);
+                        list.remove(2);//man removar båda minus tecken
+                    }
+                    else if(list.get(2).equals("-")) { //om det är nåt sånt 5,*,-,5
+                        if (canConvert(list.get(3))) {
+                            if(list.get(3).substring(0,1).equals("-"))
+                                list.set(2, list.get(3).substring(1));
+                            else //om det är nåt sånt -,43
+                                list.set(2, "-" + list.get(3));
+                            list.remove(3);
+                        }
+                        else return "Err";// om det är nåt
+                    }
+
+                    float tempDouble = Float.parseFloat(list.get(0)) * Float.parseFloat(list.get(2));
+                    list.set(0, "" + tempDouble);
+                    list.remove(1);// om det är något sånt 3,*,4 så removar den i de här linjerna * och 4. efter att ha gjort uträkningen och ändrat postion 0 till resultatet
+                    list.remove(1);
+                }
+                else if (list.get(1).equals("/") &&  canConvert(list.get(0))) {
+                    if(list.get(2).equals("-") && list.get(3).equals("-")) {//om det är nåt sånt 5,*,-,-,5
+                        list.remove(2);
+                        list.remove(2);//man removar båda minus tecken
+                    }
+                    else if(list.get(2).equals("-")) { //om det är nåt sånt 5,*,-,5
+                        if (canConvert(list.get(3))) {
+                            if(list.get(3).substring(0,1).equals("-"))
+                                list.set(2, list.get(3).substring(1));
+                            else //om det är nåt sånt -,43
+                                list.set(2, "-" + list.get(3));
+                            list.remove(3);
+                        }
+                        else return "Err";// om det är nåt
+                    }
+
+                    float tempDouble = Float.parseFloat(list.get(0)) / Float.parseFloat(list.get(2));
+                    list.set(0, "" + tempDouble);
+                    list.remove(1);
+                    list.remove(1);
+                }
+                else if (list.get(1).equals("+") && canConvert(list.get(0))) {
+                    if(list.get(2).equals("-") && list.get(3).equals("-")) {//om det är nåt sånt 5,*,-,-,5
+                        list.remove(2);
+                        list.remove(2);//man removar båda minus tecken
+                    }
+                    else if(list.get(2).equals("-")) { //om det är nåt sånt 5,*,-,5
+                        if (canConvert(list.get(3))) {
+                            if(list.get(3).substring(0,1).equals("-"))
+                                list.set(2, list.get(3).substring(1));
+                            else //om det är nåt sånt -,43
+                                list.set(2, "-" + list.get(3));
+                            list.remove(3);
+                        }
+                        else return "Err";// om det är nåt
+                    }
+
+                    float tempDouble = Float.parseFloat(list.get(0)) + Float.parseFloat(list.get(2));
+                    list.set(0, "" + tempDouble);
+                    list.remove(1);
+                    list.remove(1);
+                }
+                else if (list.get(1).equals("-") && canConvert(list.get(0))) {
+                    if(list.get(2).equals("-") && list.get(3).equals("-")) {//om det är nåt sånt 5,*,-,-,5
+                        list.remove(2);
+                        list.remove(2);//man removar båda minus tecken
+                    }
+                    else if( list.get(2).equals("-")) { //om det är nåt sånt 5,*,-,5
+                        if (canConvert(list.get(3))) {
+                            if(list.get(3).substring(0,1).equals("-"))
+                                list.set(2, list.get(3).substring(1));
+                            else //om det är nåt sånt -,43
+                                list.set(2, "-" + list.get(3));
+                            list.remove(3);
+                        }
+                        else return "Err";// om det är nåt
+                    }
+
+                    float tempDouble = Float.parseFloat(list.get(0)) - Float.parseFloat(list.get(2));
+                    list.set(0, "" + tempDouble);
+                    list.remove(1);
+                    list.remove(1);
+                }
+                else return "Err";
+            }
+            return list.get(0);
         }
+        return "Err";
+
     }
 
+    private boolean canConvert(String string) {//kollar om man kan konvertera till float eller double. förmodligen int också men försvinner decimaler
+        if(string.matches("[0-9.-]+") && string.matches("^[^.]+(\\.[^.]+)?$") && !string.equals("-"))// första kollar om det är bara nummer, punkter och minus tecken. Nästa kollar att det bara finns en punkt och att stringet inte startar eller slutar på det.
+            return true;
+        return false;
+    }
+
+
+    private  int speicalIndex(String string)//kollar vilket tecker är först, inget tecken så returnar det 1000 som betyder att man behöver inte göra något. Om -1 är det error
+    {
+        int anInt = 1000;
+        if(notMinus(string.indexOf('*')))
+            anInt = string.indexOf('*');
+        if(notMinus(string.indexOf('+')) && string.indexOf('+') < anInt)
+            anInt = string.indexOf('+');
+        if(notMinus(string.indexOf('-')) && string.indexOf('-') < anInt)
+            anInt = string.indexOf('-');
+        if(notMinus(string.indexOf('/')) && string.indexOf('/') < anInt)
+            anInt = string.indexOf('/');
+        if(notMinus(string.indexOf('(')) && string.indexOf('(') < anInt)
+            anInt = string.indexOf('(');
+        if(notMinus(string.indexOf(')')) && string.indexOf(')') < anInt)//det blir -1 och index av ')' är mindre än '(' eftersom det ska börja med '('
+            anInt = -1;
+        return anInt;
+    }
+    private boolean notMinus(int anInt)
+    {
+        if(anInt > -1)
+            return true;
+        return false;
+    }
+
+    private boolean parantesNearest(String string)
+    {
+        int anInt = 1000;
+        if(notMinus(string.indexOf('*')))
+            anInt = string.indexOf('*');
+        if(notMinus(string.indexOf('+')) && string.indexOf('+') < anInt)
+            anInt = string.indexOf('+');
+        if(notMinus(string.indexOf('-')) && string.indexOf('-') < anInt)
+            anInt = string.indexOf('-');
+        if(notMinus(string.indexOf('/')) && string.indexOf('/') < anInt)
+            anInt = string.indexOf('/');
+        if(notMinus(string.indexOf('(')) && string.indexOf('(') < anInt)
+            return true;
+
+        return false;
+
+    }
+    private int specialIndex2(String string)//kollar vad man ska göra(efter att man vet att det finns en '(' i stringen man ska beräkna) beroende på vem som kommer först eller om det är error
+    {
+        int anInt = -1;
+        if(notMinus(string.indexOf(')')))
+            anInt = 1;
+        else //blir error här pga om det finns en '(' måste det finnas en ')'
+            return anInt;
+        if(notMinus(string.indexOf('(')) && string.indexOf('(') < string.indexOf(')'))
+            anInt = 2;
+
+        return anInt;
+    }
+    private int specialIndex3(String string)//kollar indexet av första typ av parantes efter man vet vad man ska göra genom specialIndex2.
+    {
+        int anInt = string.indexOf(')');
+        if(notMinus(string.indexOf('(')) && string.indexOf('(') < anInt)
+            return string.indexOf('(');
+
+        return anInt;
+    }
     // TODO: Start of calculations formulas other than calculations
 
 
